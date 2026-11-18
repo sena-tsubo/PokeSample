@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     // ExoPlayerのインスタンスを保持する変数
     private var exoPlayer: ExoPlayer? = null
     // UriとMediaItemをクラスレベルで保持する
-    private val gson = Gson()
+
 
     private lateinit var sampleMediaItem: MediaItem
 
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             insets
 
         }
-        runGsonMiniTest()
+
         //手順１---  Viewの取得 -----
         val btSamplePlay = findViewById<Button>(R.id.btSamplePlay)
         val btStop = findViewById<Button>(R.id.btStop)
@@ -107,39 +107,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-    }
-    private fun runGsonMiniTest() {
-        // 1. テスト用の擬似JSONデータ（わざと不要な "moves" なども混ぜておく）[cite: 5]
-        val sampleJson = """
-            {
-              "id": 25,
-              "name": "pikachu",
-              "height": 4,
-              "weight": 60,
-              "cries": {
-                "latest": "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/25.ogg"
-              },
-              "sprites": {
-                "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
-              },
-              "types": [
-                { "type": { "name": "electric" } }
-              ],
-              "moves": [
-                "10まんボルト", "でんこうせっか", "ここに何千行あってもGsonは無視してくれる！"
-              ]
-            }
-        """.trimIndent()
-
-        // 2. ★最重要の1行：JSON文字列を PokemonResponse クラスに一発変換！[cite: 5]
-        val testResult = gson.fromJson(sampleJson, PokemonResponse::class.java)
-
-        // 3. ちゃんと箱に入ったか Logcat に出力して確認する[cite: 5]
-        Log.d("GsonMiniTest", "★テスト成功！")
-        Log.d("GsonMiniTest", "図鑑番号: No.${testResult.id}")
-        Log.d("GsonMiniTest", "名前: ${testResult.name}")
-        Log.d("GsonMiniTest", "タイプ: ${testResult.types[0].type.name}")
-        Log.d("GsonMiniTest", "鳴き声URL: ${testResult.cries.latest}")
     }
 
     // アプリが終了（または画面が破棄）される時にプレーヤーを解放する!!
