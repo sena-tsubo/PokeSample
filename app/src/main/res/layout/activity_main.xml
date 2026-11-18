@@ -8,27 +8,116 @@
     android:background="?android:attr/colorBackground"
     android:padding="24dp">
 
-    <!-- タイトル (一番上に配置) -->
+    <!-- ==========================================
+         PokeAPI 検索エリア
+         ========================================== -->
     <TextView
-        android:id="@+id/tvStep1Title"
+        android:id="@+id/tvStep2Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/title_audio_test"
+        android:layout_marginTop="8dp"
+        android:text="@string/title_api_test"
         android:textAppearance="?attr/textAppearanceTitleMedium"
         android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 再生ボタン (左側) -->
+    <!-- 検索ボックス (入力欄 + ボタン) -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPokemonId"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/btSearch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvStep2Title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPokemonId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_pokemon_id"
+            android:inputType="number"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:text="@string/action_search"
+        app:cornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tilPokemonId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tilPokemonId" />
+
+    <!-- 結果表示エリア (画像とテキスト) -->
+    <ImageView
+        android:id="@+id/ivPokemon"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="32dp"
+        android:contentDescription="ポケモン画像"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tilPokemonId" />
+
+    <TextView
+        android:id="@+id/tvPokemonInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/default_pokemon_info"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceTitleLarge"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivPokemon" />
+
+    <!-- 検索で取得した鳴き声用の再生ボタン -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btPlayApiCry"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="32dp"
+        android:enabled="false"
+        android:text="ポケモンの鳴き声を再生"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:icon="@android:drawable/ic_media_play"
+        app:iconGravity="textStart"
+        app:cornerRadius="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPokemonInfo" />
+
+    <!-- ==========================================
+         BGM (バックグラウンド) 再生エリア
+         ========================================== -->
+    <View
+        android:id="@+id/dividerBottom"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btPlayApiCry" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btSamplePlay"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:text="@string/action_play"
-        android:textSize="18sp"
+        android:text="@string/action_play_bg"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:icon="@android:drawable/ic_media_play"
         app:iconGravity="textStart"
@@ -36,9 +125,8 @@
         app:layout_constraintEnd_toStartOf="@+id/btStop"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvStep1Title" />
+        app:layout_constraintTop_toBottomOf="@id/dividerBottom" />
 
-    <!-- 停止ボタン (右側) -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btStop"
         style="@style/Widget.Material3.Button.OutlinedButton"
@@ -46,8 +134,8 @@
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
         android:enabled="false"
-        android:text="@string/action_stop"
-        android:textSize="18sp"
+        android:text="@string/action_stop_bg"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:icon="@android:drawable/ic_media_pause"
         app:iconGravity="textStart"

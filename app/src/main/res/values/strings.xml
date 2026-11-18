@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">PokeSample</string>
-    <string name="title_audio_test">サンプル音声テスト</string>
-    <string name="action_play">再生</string>
-    <string name="action_stop">停止</string>
+    <string name="title_api_test">PokeAPI 検索テスト</string>
+    <string name="hint_pokemon_id">図鑑番号 (例: 25)</string>
+    <string name="action_search">検索</string>
+    <string name="default_pokemon_info">番号を入力して検索してください</string>
+    <string name="action_play_bg">BGM再生</string>
+    <string name="action_stop_bg">BGM停止</string>
 </resources>
