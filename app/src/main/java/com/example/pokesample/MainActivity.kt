@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             insets
 
         }
-
+        runGsonMiniTest()
         //手順１---  Viewの取得 -----
         val btSamplePlay = findViewById<Button>(R.id.btSamplePlay)
         val btStop = findViewById<Button>(R.id.btStop)
