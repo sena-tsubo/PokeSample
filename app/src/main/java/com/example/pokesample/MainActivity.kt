@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    // アプリが終了（または画面が破棄）される時にプレーヤーを解放する
+    // アプリが終了（または画面が破棄）される時にプレーヤーを解放する!!
     override fun onDestroy() {
         super.onDestroy()
         exoPlayer?.release()
