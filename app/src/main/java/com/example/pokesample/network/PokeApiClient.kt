@@ -23,7 +23,7 @@ class PokeApiClient {
                     gson.fromJson(result, PokemonResponse::class.java)
                 }
             } catch (e: Exception){
-                Log.e("PoleApiclient" , "通信エラー");
+                Log.e("PokeApiClient" , "通信エラー");
                 null
             } as PokemonResponse?
         }

@@ -27,14 +27,17 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
 
+// TODO: MainActivityの音源再生処理をSoundPlayerManagerに委譲（移行）する
+// ※スライドでの解説ポイント：
+// MainActivityにUI操作(ボタン)とビジネスロジック(音を鳴らす処理)が混ざっているので、
+// 音を鳴らす処理は新しく作った SoundPlayerManager クラスに任せる（責務の分離）ことを説明する。
 
 class MainActivity : AppCompatActivity() {
 
+    // TODO: 以下のExoPlayer関連の変数はSoundPlayerManager内で管理するため不要になる
     // ExoPlayerのインスタンスを保持する変数
     private var exoPlayer: ExoPlayer? = null
     // UriとMediaItemをクラスレベルで保持する
-
-
     private lateinit var sampleMediaItem: MediaItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         val btSamplePlay = findViewById<Button>(R.id.btSamplePlay)
         val btStop = findViewById<Button>(R.id.btStop)
 
+        // TODO: 手順２〜３のExoPlayer初期化・準備処理はSoundPlayerManagerに移動する
         //手順２--- メディアの準備 -----
         // rawフォルダの opening.wav を指定してMediaItemを作成
         val uri = "android.resource://${packageName}/${R.raw.opening}".toUri()
@@ -67,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        // TODO: ボタンクリック時の処理の中身を SoundPlayerManager.playBgm() などの呼び出しに置き換える
         //手順３--- 1. 再生ボタンが押された時の処理 -----
         btSamplePlay.setOnClickListener {
             exoPlayer?.let { player ->
@@ -76,24 +81,28 @@ class MainActivity : AppCompatActivity() {
                 }
                 player.play() // 再生開始
 
+                // TODO: SoundPlayerManagerのコールバック(onBgmStateChanged)内で状態を切り替える設計に変更する
                 // ボタンの状態を切り替え
                 btSamplePlay.isEnabled = false
                 btStop.isEnabled = true
             }
         }
 
+        // TODO: ボタンクリック時の処理の中身を SoundPlayerManager.stopBgm() などの呼び出しに置き換える
         //手順４--- 2. 停止ボタンが押された時の処理 -----
         btStop.setOnClickListener {
             exoPlayer?.let { player ->
                 player.pause() // 再生を一時停止(stopではなくpauseにして再開しやすくする)
                 player.seekTo(0) // 巻き戻す
 
+                // TODO: SoundPlayerManagerのコールバック(onBgmStateChanged)内で状態を切り替える設計に変更する
                 // ボタンの状態を元に戻す
                 btSamplePlay.isEnabled = true
                 btStop.isEnabled = false
             }
         }
 
+        // TODO: このListener処理はSoundPlayerManager内に実装済み(onIsPlayingChanged)のためMainActivityからは削除する
         //手順５--- 3. 再生が最後まで終わった時の処理（リスナー） -----
         exoPlayer?.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
@@ -109,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    // TODO: release()の直接呼び出しを、SoundPlayerManager.releaseAll() の呼び出しに変更する
     // アプリが終了（または画面が破棄）される時にプレーヤーを解放する!!
     override fun onDestroy() {
         super.onDestroy()
