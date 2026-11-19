@@ -15,11 +15,6 @@ class SoundPlayerManager(
     // 1. BGM用プレイヤー（ループ再生）[cite: 5]
     private val bgmPlayer: ExoPlayer = ExoPlayer.Builder(context).build().apply {
         repeatMode = Player.REPEAT_MODE_ONE
-        addListener(object : Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                onBgmStateChanged(isPlaying)
-            }
-        })
     }
 
     // 2. 鳴き声用プレイヤー（単発再生）[cite: 5]
@@ -32,6 +27,7 @@ class SoundPlayerManager(
         bgmPlayer.setMediaItem(MediaItem.fromUri(uriString))
         bgmPlayer.prepare()
         bgmPlayer.play()
+        onBgmStateChanged(true) // 再生を始めたことを画面に知らせる
     }
 
     /**
@@ -39,6 +35,7 @@ class SoundPlayerManager(
      */
     fun stopBgm() {
         bgmPlayer.stop()
+        onBgmStateChanged(false) // 停止したことを画面に知らせる
     }
 
     /**
