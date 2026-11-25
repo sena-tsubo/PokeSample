@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -144,5 +145,46 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/btSamplePlay"
         app:layout_constraintTop_toTopOf="@id/btSamplePlay" />
+
+    <!-- ==========================================
+         【ローディング】手順１: ローディング画面 (通信中だけ表示する)
+         ・上下左右を parent につなぎ、大きさ 0dp → 画面いっぱいに広がる
+         ・一番最後に書く + elevation を高くする → ほかの部品(ボタンの影など)より上に重なる
+         ・clickable="true"          … タッチをここで受け止めて、後ろのボタンを押せなくする
+         ・visibility="gone"         … アプリ実行中は、最初は非表示(MainActivity の fetchPokemonWithLoading で表示する)
+         ・tools:visibility="visible" … Android Studioのプレビューの中だけ表示して、見た目を確認できる
+         ========================================== -->
+    <LinearLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/loading_scrim"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <!-- ぐるぐる回る表示 (indeterminate = 終わるまでの長さがわからない) -->
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:indicatorColor="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/loading_message"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
