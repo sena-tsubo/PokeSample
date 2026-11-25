@@ -49,7 +49,7 @@ dependencies {
     // 3. API通信（OkHttp）
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     // 4. JSON変換（Gson）
-    implementation("com.google.code.gson:gson:2.11.0")
+    implementation(libs.gson)
     // 5. 画像表示（Coil）
     implementation("io.coil-kt:coil:2.7.0")
     // 🔼 追加ここまで 🔼

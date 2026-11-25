@@ -2,33 +2,123 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/colorBackground"
     android:padding="24dp">
 
-    <!-- タイトル (一番上に配置) -->
+    <!-- ==========================================
+         PokeAPI 検索エリア
+         ========================================== -->
     <TextView
-        android:id="@+id/tvStep1Title"
+        android:id="@+id/tvStep2Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/title_audio_test"
+        android:layout_marginTop="8dp"
+        android:text="@string/title_api_test"
         android:textAppearance="?attr/textAppearanceTitleMedium"
         android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- 再生ボタン (左側) -->
+    <!-- 検索ボックス (入力欄 + ボタン) -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPokemonId"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/btSearch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvStep2Title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPokemonId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_pokemon_id"
+            android:inputType="number"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:text="@string/action_search"
+        app:cornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tilPokemonId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tilPokemonId" />
+
+    <!-- 結果表示エリア (画像とテキスト) -->
+    <ImageView
+        android:id="@+id/ivPokemon"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="32dp"
+        android:contentDescription="ポケモン画像"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tilPokemonId" />
+
+    <TextView
+        android:id="@+id/tvPokemonInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/default_pokemon_info"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceTitleLarge"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivPokemon" />
+
+    <!-- 検索で取得した鳴き声用の再生ボタン -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btPlayApiCry"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="32dp"
+        android:enabled="false"
+        android:text="ポケモンの鳴き声を再生"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:icon="@android:drawable/ic_media_play"
+        app:iconGravity="textStart"
+        app:cornerRadius="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPokemonInfo" />
+
+    <!-- ==========================================
+         BGM (バックグラウンド) 再生エリア
+         ========================================== -->
+    <View
+        android:id="@+id/dividerBottom"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btPlayApiCry" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btSamplePlay"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:text="@string/action_play"
-        android:textSize="18sp"
+        android:text="@string/action_play_bg"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:icon="@android:drawable/ic_media_play"
         app:iconGravity="textStart"
@@ -36,9 +126,8 @@
         app:layout_constraintEnd_toStartOf="@+id/btStop"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvStep1Title" />
+        app:layout_constraintTop_toBottomOf="@id/dividerBottom" />
 
-    <!-- 停止ボタン (右側) -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btStop"
         style="@style/Widget.Material3.Button.OutlinedButton"
@@ -46,8 +135,8 @@
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
         android:enabled="false"
-        android:text="@string/action_stop"
-        android:textSize="18sp"
+        android:text="@string/action_stop_bg"
+        android:textSize="14sp"
         android:textStyle="bold"
         app:icon="@android:drawable/ic_media_pause"
         app:iconGravity="textStart"
@@ -56,5 +145,69 @@
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/btSamplePlay"
         app:layout_constraintTop_toTopOf="@id/btSamplePlay" />
+
+    <!-- ==========================================
+         【ローディング】手順１: ローディング画面 (通信中だけ表示する)
+         ・上下左右を parent につなぎ、大きさ 0dp → タッチを受け止める範囲が画面いっぱいに広がる(見た目は透明)
+         ・一番最後に書く + elevation を高くする → ほかの部品(ボタンの影など)より上に重なる
+         ・clickable="true"          … タッチをここで受け止めて、後ろのボタンを押せなくする
+         ・visibility="gone"         … アプリ実行中は、最初は非表示(MainActivity の fetchPokemonWithLoading で表示する)
+         ・tools:visibility="visible" … Android Studioのプレビューの中だけ表示して、見た目を確認できる
+         ========================================== -->
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clickable="true"
+        android:elevation="16dp"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+        <!-- ★意図: この外側は「透明」。見た目には出ないが、タッチだけ受け止める役(押し間違い防止)。
+             暗い色は、中央のカードだけに付ける。
+             ★FrameLayout にした理由: 中身はカード1つだけ。「並べる」必要がなく、
+             「真ん中に1つ置く」だけなので、重ねる・置くための FrameLayout が向いている。 -->
+
+        <!-- 【ローディング】中央のカード (角丸の半透明の箱)
+             ★意図: 画面全体を暗くせず、中央に小さく出すことで、余白(24dp)の縁が気にならない。
+             角丸(16dp)にして、ほかのボタン(cornerRadius=12dp)と雰囲気をそろえている。 -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="@color/loading_scrim"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingHorizontal="32dp"
+                android:paddingVertical="24dp">
+
+                <!-- ぐるぐる回る表示 (indeterminate = 終わるまでの長さがわからない) -->
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    app:indicatorColor="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/loading_message"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
