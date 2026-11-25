@@ -148,43 +148,66 @@
 
     <!-- ==========================================
          【ローディング】手順１: ローディング画面 (通信中だけ表示する)
-         ・上下左右を parent につなぎ、大きさ 0dp → 画面いっぱいに広がる
+         ・上下左右を parent につなぎ、大きさ 0dp → タッチを受け止める範囲が画面いっぱいに広がる(見た目は透明)
          ・一番最後に書く + elevation を高くする → ほかの部品(ボタンの影など)より上に重なる
          ・clickable="true"          … タッチをここで受け止めて、後ろのボタンを押せなくする
          ・visibility="gone"         … アプリ実行中は、最初は非表示(MainActivity の fetchPokemonWithLoading で表示する)
          ・tools:visibility="visible" … Android Studioのプレビューの中だけ表示して、見た目を確認できる
          ========================================== -->
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/loadingOverlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/loading_scrim"
         android:clickable="true"
         android:elevation="16dp"
         android:focusable="true"
-        android:gravity="center"
-        android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible">
+        <!-- ★意図: この外側は「透明」。見た目には出ないが、タッチだけ受け止める役(押し間違い防止)。
+             暗い色は、中央のカードだけに付ける。
+             ★FrameLayout にした理由: 中身はカード1つだけ。「並べる」必要がなく、
+             「真ん中に1つ置く」だけなので、重ねる・置くための FrameLayout が向いている。 -->
 
-        <!-- ぐるぐる回る表示 (indeterminate = 終わるまでの長さがわからない) -->
-        <com.google.android.material.progressindicator.CircularProgressIndicator
+        <!-- 【ローディング】中央のカード (角丸の半透明の箱)
+             ★意図: 画面全体を暗くせず、中央に小さく出すことで、余白(24dp)の縁が気にならない。
+             角丸(16dp)にして、ほかのボタン(cornerRadius=12dp)と雰囲気をそろえている。 -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminate="true"
-            app:indicatorColor="@color/white" />
+            android:layout_gravity="center"
+            app:cardBackgroundColor="@color/loading_scrim"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/loading_message"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            android:textColor="@color/white" />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingHorizontal="32dp"
+                android:paddingVertical="24dp">
+
+                <!-- ぐるぐる回る表示 (indeterminate = 終わるまでの長さがわからない) -->
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    app:indicatorColor="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/loading_message"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
