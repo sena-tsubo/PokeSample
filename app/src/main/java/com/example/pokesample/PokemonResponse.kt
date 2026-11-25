@@ -13,7 +13,7 @@ data class PokemonResponse(
 )
 
 data class Cries(
-    val latest: String
+    val latest: String? // 鳴き声のURLが無い場合(null)に備えて String? にしておく
 )
 
 data class Sprites(

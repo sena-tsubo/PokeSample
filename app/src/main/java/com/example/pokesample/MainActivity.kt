@@ -20,6 +20,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var soundPlayerManager: SoundPlayerManager
     private lateinit var pokeApiClient: PokeApiClient
 
+    //【鳴き声】手順１--- 検索で見つかったポケモンの鳴き声URLを覚えておく入れ物 -----
+    // 鳴き声ボタンを押すのは、検索が終わった「あと」になる。
+    // launchの中の変数(pokemon)は、その { } の外では使えなくなってしまうので、
+    // Activityのプロパティ(クラスの変数)に保存しておく。
+    // null = まだ検索していない、または検索に失敗した(＝再生できる鳴き声がない)
+    private var currentCryUrl: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -45,21 +52,24 @@ class MainActivity : AppCompatActivity() {
         val btStop = findViewById<Button>(R.id.btStop)
         val etPokemonId = findViewById<TextInputEditText>(R.id.etPokemonId)
         val btSearch = findViewById<Button>(R.id.btSearch)
+        //【鳴き声】手順２--- 鳴き声ボタンを取得する -----
+        // XMLで最初は無効(android:enabled="false")にしてあるので、検索に成功するまで押せない
+        val btPlayApiCry = findViewById<Button>(R.id.btPlayApiCry)
 
         soundPlayerManager = SoundPlayerManager(this) { isPlaying ->
             btSamplePlay.isEnabled = !isPlaying
             btStop.isEnabled = isPlaying
         }
         pokeApiClient = PokeApiClient()
-        //手順２--- メディアの準備 -----
+
         // rawフォルダの opening.wav を指定してMediaItemを作成
         val uri = "android.resource://${packageName}/${R.raw.opening}"
 
-        //手順３--- 1. 再生ボタンが押された時の処理 -----
+
         btSamplePlay.setOnClickListener {
             soundPlayerManager.playBgm(uri)
         }
-        //手順４--- 2. 停止ボタンが押された時の処理 -----
+
         btStop.setOnClickListener{
             soundPlayerManager.stopBgm()
         }
@@ -72,15 +82,39 @@ class MainActivity : AppCompatActivity() {
                 val pokemon = pokeApiClient.fetchPokemon(query)
                 if (pokemon != null){
                     Log.d("MainActivity" , "$pokemon")
+                    //【鳴き声】手順１--- 取得したポケモンの鳴き声URLを、入れ物に保存する -----
+                    // pokemon(PokemonResponse) → cries(Cries) → latest(String?) の順にたどる
+                    // (JSONにURLが無い場合に備えて、型は String? にしてある)
+                    val cryUrl = pokemon.cries.latest
+                    //【鳴き声】手順４--- 鳴き声がない(nullまたは空)ポケモンは、null を保存する -----
+                    // こうしておくと currentCryUrl は「使えるURL」か「null」のどちらかだけになる。
+                    // → 手順２(ボタンの有効/無効)も、手順３(再生)も、今のコードのまま安全に動く。
+                    currentCryUrl = if (cryUrl.isNullOrBlank()) null else cryUrl
                     // 成功の合図としてToastを表示する
                     Toast.makeText(this@MainActivity, R.string.success_pokemon_found, Toast.LENGTH_SHORT).show()
                     // 入力欄を空にする
                     etPokemonId.text?.clear()
                 } else {
+                    //【鳴き声】手順１--- 検索に失敗したら、前のポケモンの鳴き声URLを消しておく -----
+                    // (消さないと、あとで間違ったポケモンの鳴き声を再生してしまう)
+                    currentCryUrl = null
                     //実在するポケモンじゃなかった場合には、Toastメッセージを表示する。
                     Toast.makeText(this@MainActivity, R.string.error_pokemon_not_found, Toast.LENGTH_SHORT).show()
                 }
+                //【鳴き声】手順２--- 鳴き声ボタンを押せるかどうかは、「URLがあるかどうか」で決める -----
+                // 成功 → currentCryUrl にURLが入っている → true(押せる)
+                // 失敗 → currentCryUrl は null → false(押せない)
+                btPlayApiCry.isEnabled = currentCryUrl != null
             }
+        }
+
+        //【鳴き声】手順３--- 鳴き声ボタンが押された時の処理 -----
+        btPlayApiCry.setOnClickListener {
+            // 入れ物にURLが入っていない(null)場合は何もしない
+            // (ボタンは無効なので通常はここに来ないが、念のためのガード)
+            val cryUrl = currentCryUrl ?: return@setOnClickListener
+            // 鳴き声の再生は、SoundPlayerManagerにお願いする
+            soundPlayerManager.playCry(cryUrl)
         }
 
     }
