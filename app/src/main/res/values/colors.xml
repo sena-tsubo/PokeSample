@@ -2,6 +2,5 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <!--【ローディング】中央のカードの色(黒の約60%。後ろの画面がうっすら見える) -->
     <color name="loading_scrim">#99000000</color>
 </resources>

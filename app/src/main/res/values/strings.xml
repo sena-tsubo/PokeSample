@@ -8,6 +8,5 @@
     <string name="action_stop_bg">BGM停止</string>
     <string name="error_pokemon_not_found">ポケモンが見つかりませんでした。番号や通信状況を確認してください</string>
     <string name="success_pokemon_found">取得に成功しました！</string>
-    <!--【ローディング】通信中に表示する文言 -->
     <string name="loading_message">検索中…</string>
 </resources>
